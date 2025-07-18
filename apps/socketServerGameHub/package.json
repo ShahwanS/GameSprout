@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Socket.IO server for GameSprout game state management",
   "private": true,
+  "type": "module",
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
