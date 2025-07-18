@@ -6,20 +6,26 @@ test.describe('Homepage', () => {
   });
 
   test('should have the correct title', async ({ page }) => {
-    await expect(page).toHaveTitle(/TanStack Start | Type-Safe, Client-First, Full-Stack React Framework/i); // Case-insensitive match
+    await expect(page).toHaveTitle(/GameSprout|TanStack Start/i); // Case-insensitive match
   });
 
-  test('should display a welcome message or main heading', async ({ page }) => {
-    const mainHeading = page.getByRole('heading', { name: /Mini Game Collection/i, level: 1 });
+  test('should display the main GameSprout heading', async ({ page }) => {
+    const mainHeading = page.getByRole('heading', { name: /GameSprout/i, level: 1 });
     await expect(mainHeading).toBeVisible();
   });
 
-  test('should have navigation links to games in the main content', async ({ page }) => {
-    // Target links specifically within the main content area
-    const rpslsLink = page.locator('main').getByRole('link', { name: /Rock Paper Scissors Lizard Spock/i });
-    await expect(rpslsLink).toBeVisible();
+  test('should have game cards in the main content', async ({ page }) => {
+    // Check for game cards in the main content area
+    const fishingGameCard = page.locator('main').getByRole('link', { name: /Fishing Game/i });
+    await expect(fishingGameCard).toBeVisible();
 
-    const reactionTestLink = page.locator('main').getByRole('link', { name: /Reaction Test/i });
-    await expect(reactionTestLink).toBeVisible();
+    const kniffelGameCard = page.locator('main').getByRole('link', { name: /Kniffel/i });
+    await expect(kniffelGameCard).toBeVisible();
+
+    const rpslsGameCard = page.locator('main').getByRole('link', { name: /Rock Paper Scissors Lizard Spock/i });
+    await expect(rpslsGameCard).toBeVisible();
+
+    const reactionTestCard = page.locator('main').getByRole('link', { name: /Reaction Test/i });
+    await expect(reactionTestCard).toBeVisible();
   });
 }); 

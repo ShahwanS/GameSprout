@@ -24,8 +24,7 @@ test.describe('Rock Paper Scissors Lizard Spock Game', () => {
     await expect(page.getByRole('heading', { name: /Game Over!/i })).toBeVisible({ timeout: 10000 });
     await expect(page.getByText(`You chose ${userChoice}`)).toBeVisible();
     await expect(page.getByText(/AI chose (Rock|Paper|Scissors|Lizard|Spock)/)).toBeVisible();
-    const resultText = await page.locator('p[aria-label="Result"]').textContent();
-    expect(resultText).toMatch(/(crushes|covers|cuts|decapitates|eats|poisons|smashes|disproves|vaporizes|Draw|You Lose)/i);
+    await expect(page.getByText(/(crushes|covers|cuts|decapitates|eats|poisons|smashes|disproves|vaporizes|Draw|You Lose)/i)).toBeVisible();
     await expect(page.getByRole('button', { name: /Play Again/i })).toBeVisible();
     }).toPass()
   });

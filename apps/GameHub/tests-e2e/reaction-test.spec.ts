@@ -16,7 +16,7 @@ test.describe('Reaction Test Game', () => {
     await expect(async () => {
     await page.getByRole('button', { name: /Start Game/i }).click()
     await page.waitForLoadState('domcontentloaded');
-    const reactingButton = page.getByRole('button', { name: 'Wait for green...', exact: true });
+    const reactingButton = page.getByRole('button', { name: 'Wait for green…', exact: true });
     await expect(reactingButton).toBeVisible();
     }).toPass()
    
@@ -26,7 +26,7 @@ test.describe('Reaction Test Game', () => {
     await expect(async () => {
     await page.getByRole('button', { name: /Start Game/i }).click();
     await page.waitForLoadState('domcontentloaded');
-    const reactingButton = page.getByRole('button', { name: 'Wait for green...'});
+    const reactingButton = page.getByRole('button', { name: 'Wait for green…'});
     await expect(reactingButton).toBeVisible();
     await reactingButton.click();
     await page.waitForLoadState('domcontentloaded');
