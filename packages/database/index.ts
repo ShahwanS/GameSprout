@@ -12,5 +12,9 @@ export const prisma =
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
+// Re-export everything from Prisma client
 export * from "@prisma/client";
+
+// Explicitly export the prisma instance
+export { prisma as default };
 
