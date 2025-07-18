@@ -7,10 +7,13 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy the entire repository structure
-COPY . .
+# Install dependencies based on the preferred package manager
+COPY package.json package-lock.json* ./
+COPY apps/socketServerGameHub/package.json ./apps/socketServerGameHub/
+COPY packages/database/package.json ./packages/database/
+COPY packages/typescript-config/package.json ./packages/typescript-config/
+COPY packages/eslint-config/package.json ./packages/eslint-config/
 
-# Install dependencies
 RUN npm ci
 
 # Rebuild the source code only when needed
