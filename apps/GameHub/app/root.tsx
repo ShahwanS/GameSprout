@@ -55,6 +55,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
           }}
         />
+        <script defer src="https://umami.stormyfocus.cloud/script.js" data-website-id="6cf95d5a-01b4-4881-8d28-acad5d8a60f2"></script>
       </body>
     </html>
   );

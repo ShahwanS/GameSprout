@@ -10,7 +10,8 @@ export default {
     // Handle image imports
     '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
     // Handle module path aliases
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/$1',
+    '^~/(.*)$': '<rootDir>/app/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testPathIgnorePatterns: [
@@ -23,4 +24,5 @@ export default {
     '<rootDir>/.output/',
     '<rootDir>/.vercel/'
   ],
+
 }; 
