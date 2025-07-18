@@ -27,10 +27,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Generate Prisma client
-RUN npm run build --filter=@repo/database
+RUN npm run db:generate --filter=@repo/database
 
-# Build the socket server
-RUN npm run build --filter=@repo/socket-server
+# Build the socket server directly without turbo
+RUN cd apps/socketServerGameHub && npm run build
 
 # Production image, copy all the files and run the app
 FROM base AS runner
