@@ -13,6 +13,7 @@
     "db:push": "turbo run db:push",
     "db:migrate": "turbo run db:migrate",
     "db:studio": "turbo run db:studio",
+
     "postinstall": "turbo run db:generate"
   },
   "devDependencies": {

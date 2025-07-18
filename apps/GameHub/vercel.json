@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd ../.. && turbo run build --filter=@repo/gamesprout...",
+  "installCommand": "cd ../.. && npm install",
+  "framework": "remix"
+} 
