@@ -14,6 +14,9 @@ COPY packages/database/package.json ./packages/database/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 
+# Copy Prisma schema for the database package
+COPY packages/database/prisma ./packages/database/prisma/
+
 RUN npm ci
 
 # Rebuild the source code only when needed
