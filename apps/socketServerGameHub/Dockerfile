@@ -29,6 +29,9 @@ COPY . .
 # Generate Prisma client
 RUN npm run db:generate --filter=@repo/database
 
+# Build the database package
+RUN cd packages/database && npm run build
+
 # Build the socket server directly without turbo
 RUN cd apps/socketServerGameHub && npm run build
 
@@ -46,8 +49,9 @@ COPY --from=builder --chown=socketuser:nodejs /app/apps/socketServerGameHub/dist
 COPY --from=builder --chown=socketuser:nodejs /app/apps/socketServerGameHub/package.json ./package.json
 COPY --from=builder --chown=socketuser:nodejs /app/node_modules ./node_modules
 
-# Copy the database package so @repo/database can be resolved
-COPY --from=builder --chown=socketuser:nodejs /app/packages/database ./packages/database
+# Copy the built database package so @repo/database can be resolved
+COPY --from=builder --chown=socketuser:nodejs /app/packages/database/dist ./packages/database/dist
+COPY --from=builder --chown=socketuser:nodejs /app/packages/database/package.json ./packages/database/package.json
 
 USER socketuser
 
