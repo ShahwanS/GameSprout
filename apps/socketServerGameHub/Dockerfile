@@ -46,6 +46,9 @@ COPY --from=builder --chown=socketuser:nodejs /app/apps/socketServerGameHub/dist
 COPY --from=builder --chown=socketuser:nodejs /app/apps/socketServerGameHub/package.json ./package.json
 COPY --from=builder --chown=socketuser:nodejs /app/node_modules ./node_modules
 
+# Copy the database package so @repo/database can be resolved
+COPY --from=builder --chown=socketuser:nodejs /app/packages/database ./packages/database
+
 USER socketuser
 
 EXPOSE 3001
