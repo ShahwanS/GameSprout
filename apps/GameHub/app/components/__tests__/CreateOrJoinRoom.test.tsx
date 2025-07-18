@@ -24,13 +24,14 @@ describe('CreateOrJoinRoom Component', () => {
     test('renders all input fields and buttons', () => {
       renderComponent();
 
-      // getByPlaceholderText is good for inputs where placeholder is a key identifier
-      expect(screen.getByPlaceholderText(/Your name/i)).toBeInTheDocument();
+      // Use data-testid for unique identification instead of placeholder text
+      expect(screen.getByTestId('create-name-input')).toBeInTheDocument();
+      expect(screen.getByTestId('join-name-input')).toBeInTheDocument();
 
       // getByRole is preferred for accessibility; buttons have a 'button' role
       expect(screen.getByRole('button', { name: /Create New Room/i })).toBeInTheDocument();
 
-      expect(screen.getByPlaceholderText(/Room Code/i)).toBeInTheDocument();
+      expect(screen.getByTestId('room-code-input')).toBeInTheDocument();
 
       expect(screen.getByRole('button', { name: /Join Room/i })).toBeInTheDocument();
     });
@@ -46,7 +47,7 @@ describe('CreateOrJoinRoom Component', () => {
   describe('Input Field Interactions', () => {
     test('allows typing in the "Your name" input field', () => {
       renderComponent();
-      const nameInput = screen.getByPlaceholderText(/Your name/i) as HTMLInputElement; // Cast to HTMLInputElement for 'value' property
+      const nameInput = screen.getByTestId('create-name-input') as HTMLInputElement; // Use data-testid for unique identification
 
       fireEvent.change(nameInput, { target: { value: 'Test User' } });
 
@@ -55,7 +56,7 @@ describe('CreateOrJoinRoom Component', () => {
 
     test('allows typing in the "Room Code" input field', () => {
       renderComponent();
-      const roomCodeInput = screen.getByPlaceholderText(/Room Code/i) as HTMLInputElement;
+      const roomCodeInput = screen.getByTestId('room-code-input') as HTMLInputElement;
 
       fireEvent.change(roomCodeInput, { target: { value: 'XYZ123' } });
       expect(roomCodeInput.value).toBe('XYZ123');
@@ -79,7 +80,7 @@ describe('CreateOrJoinRoom Component', () => {
       mockOnCreate.mockImplementationOnce(() => new Promise(() => {})); 
 
       renderComponent();
-      const nameInput = screen.getByPlaceholderText(/Your name/i);
+      const nameInput = screen.getByTestId('create-name-input');
       const createButton = screen.getByRole('button', { name: /Create New Room/i });
 
       fireEvent.change(nameInput, { target: { value: 'Test User' } });
@@ -97,7 +98,7 @@ describe('CreateOrJoinRoom Component', () => {
       mockOnCreate.mockRejectedValueOnce(new Error('Network Error'));
 
       renderComponent();
-      const nameInput = screen.getByPlaceholderText(/Your name/i);
+      const nameInput = screen.getByTestId('create-name-input');
       const createButton = screen.getByRole('button', { name: /Create New Room/i });
 
       fireEvent.change(nameInput, { target: { value: 'Error User' } });
@@ -114,8 +115,8 @@ describe('CreateOrJoinRoom Component', () => {
     test('shows an error if name or room code is empty when trying to join', () => {
       renderComponent();
       const joinButton = screen.getByRole('button', { name: /Join Room/i });
-      const nameInput = screen.getByPlaceholderText(/Your name/i);
-      const roomCodeInput = screen.getByPlaceholderText(/Room Code/i);
+      const nameInput = screen.getByTestId('join-name-input');
+      const roomCodeInput = screen.getByTestId('room-code-input');
 
       // Test Case 1: Both empty
       fireEvent.click(joinButton);
@@ -141,8 +142,8 @@ describe('CreateOrJoinRoom Component', () => {
       mockOnJoin.mockImplementationOnce(() => new Promise(() => {}));
 
       renderComponent();
-      const nameInput = screen.getByPlaceholderText(/Your name/i);
-      const roomCodeInput = screen.getByPlaceholderText(/Room Code/i);
+      const nameInput = screen.getByTestId('join-name-input');
+      const roomCodeInput = screen.getByTestId('room-code-input');
       const joinButton = screen.getByRole('button', { name: /Join Room/i });
 
       fireEvent.change(nameInput, { target: { value: 'Test User' } });
@@ -159,8 +160,8 @@ describe('CreateOrJoinRoom Component', () => {
       mockOnJoin.mockResolvedValueOnce(Promise.resolve()); // Simulate successful join
 
       renderComponent();
-      const nameInput = screen.getByPlaceholderText(/Your name/i);
-      const roomCodeInput = screen.getByPlaceholderText(/Room Code/i);
+      const nameInput = screen.getByTestId('join-name-input');
+      const roomCodeInput = screen.getByTestId('room-code-input');
       const joinButton = screen.getByRole('button', { name: /Join Room/i });
 
       fireEvent.change(nameInput, { target: { value: 'Test User Join Success' } });
@@ -183,8 +184,8 @@ describe('CreateOrJoinRoom Component', () => {
       mockOnJoin.mockRejectedValueOnce(new Error('Invalid room code'));
 
       renderComponent();
-      const nameInput = screen.getByPlaceholderText(/Your name/i);
-      const roomCodeInput = screen.getByPlaceholderText(/Room Code/i);
+      const nameInput = screen.getByTestId('join-name-input');
+      const roomCodeInput = screen.getByTestId('room-code-input');
       const joinButton = screen.getByRole('button', { name: /Join Room/i });
 
       fireEvent.change(nameInput, { target: { value: 'Error User' } });

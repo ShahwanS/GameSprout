@@ -13,12 +13,19 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+        cache: 'npm'
+    - name: Setup environment variables
+      run: |
+        echo "NODE_ENV=test" >> $GITHUB_ENV
+        echo "SOCKET_URL=https://socket.stormyfocus.cloud" >> $GITHUB_ENV
     - name: Install dependencies
       run: npm ci
+    - name: Generate Prisma client
+      run: npm run db:generate
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npm run test:e2e --filter=@repo/gamehub
+      run: npm run test:e2e --filter=@repo/gamesprout
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:

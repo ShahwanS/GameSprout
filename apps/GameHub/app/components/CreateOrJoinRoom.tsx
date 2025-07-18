@@ -138,6 +138,7 @@ const CreateOrJoinRoom: FC<CreateOrJoinRoomProps> = ({ onCreate, onJoin, slug })
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
+              data-testid="error-message"
             >
               {error}
             </motion.div>
@@ -174,6 +175,7 @@ const CreateOrJoinRoom: FC<CreateOrJoinRoomProps> = ({ onCreate, onJoin, slug })
                       value={name}
                       onChange={e => setName(e.target.value)}
                       className="w-full px-3 sm:px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 text-white placeholder-gray-400 transition-all text-sm sm:text-base"
+                      data-testid="create-name-input"
                     />
                   </div>
 
@@ -227,6 +229,7 @@ const CreateOrJoinRoom: FC<CreateOrJoinRoomProps> = ({ onCreate, onJoin, slug })
                       value={name}
                       onChange={e => setName(e.target.value)}
                       className="w-full px-3 sm:px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 text-white placeholder-gray-400 transition-all text-sm sm:text-base"
+                      data-testid="join-name-input"
                     />
                   </div>
 
@@ -234,10 +237,11 @@ const CreateOrJoinRoom: FC<CreateOrJoinRoomProps> = ({ onCreate, onJoin, slug })
                     <label className="block text-sm font-medium text-gray-300 mb-2">Room Code</label>
                     <input
                       type="text"
-                      placeholder="Enter room code"
+                      placeholder="Room Code"
                       value={joinRoomCode}
                       onChange={e => setJoinRoomCode(e.target.value)}
                       className="w-full px-3 sm:px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 text-white placeholder-gray-400 transition-all text-sm sm:text-base"
+                      data-testid="room-code-input"
                     />
                   </div>
 
