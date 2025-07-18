@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Socket.IO server for GameSprout game state management",
   "private": true,
-  "main": "src/server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
     "dev": "nodemon --exec tsx src/server.ts",
-    "start": "tsx src/server.ts",
+    "start": "node dist/server.js",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "check-types": "tsc --noEmit"
   },
