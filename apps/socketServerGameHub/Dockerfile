@@ -8,11 +8,11 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY ../../package.json ../../package-lock.json* ./
-COPY ../../apps/socketServerGameHub/package.json ./apps/socketServerGameHub/
-COPY ../../packages/database/package.json ./packages/database/
-COPY ../../packages/typescript-config/package.json ./packages/typescript-config/
-COPY ../../packages/eslint-config/package.json ./packages/eslint-config/
+COPY package.json package-lock.json* ./
+COPY apps/socketServerGameHub/package.json ./apps/socketServerGameHub/
+COPY packages/database/package.json ./packages/database/
+COPY packages/typescript-config/package.json ./packages/typescript-config/
+COPY packages/eslint-config/package.json ./packages/eslint-config/
 
 RUN npm ci
 
@@ -20,7 +20,7 @@ RUN npm ci
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY ../../ .
+COPY . .
 
 # Generate Prisma client
 RUN npm run build --filter=@repo/database
