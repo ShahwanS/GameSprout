@@ -4,8 +4,9 @@
     "outDir": "./dist",
     "rootDir": "./",
     "declaration": true,
-    "module": "CommonJS",
-    "moduleResolution": "node"
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ES2022"
   },
   "include": [
     "**/*.ts",
