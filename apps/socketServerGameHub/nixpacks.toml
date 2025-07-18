@@ -1,11 +1,11 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "npm"]
+nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["cd ../.. && npm install"]
+cmds = ["cd ../.. && npm ci"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["npm run build --filter=@repo/socket-server"]
 
 [start]
 cmd = "npm start" 

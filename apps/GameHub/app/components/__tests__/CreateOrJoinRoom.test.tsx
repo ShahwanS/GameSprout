@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CreateOrJoinRoom from '../CreateOrJoinRoom'; 
@@ -12,7 +11,7 @@ describe('CreateOrJoinRoom Component', () => {
   // Helper function to render the component with default mocks
   // This avoids repeating the same render logic in every test
   const renderComponent = () => {
-    render(<CreateOrJoinRoom onCreate={mockOnCreate} onJoin={mockOnJoin} />);
+    render(<CreateOrJoinRoom onCreate={mockOnCreate} onJoin={mockOnJoin} slug="test-game" />);
   };
 
   // Before each test, reset the mock functions to ensure a clean state for each test run
