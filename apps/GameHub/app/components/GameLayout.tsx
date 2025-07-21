@@ -63,13 +63,20 @@ function Spinner() {
     </div>
   );
 }
-function renderError(error: string) {
+function renderError(error: string, navigate: (path: string) => void) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
       <div className="max-w-md w-full mx-4 p-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20">
         <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-base text-center">
           {error}
         </div>
+
+        <button 
+          onClick={() => navigate('/')}
+          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-200"
+        >
+          Go to Home
+        </button>
       </div>
     </div>
   );
@@ -258,6 +265,16 @@ export default function GameLayout({
   async function handleJoin(roomCode: string, name: string) {
     try {
       setIsJoiningRoom(true);
+
+      //roomcode must match the gameId
+      const gameSlugRes = await fetch(`/api?action=getGameSlugFromCode&roomCode=${roomCode}`);
+      if (!gameSlugRes.ok) throw new Error("Failed to get game name");
+      const { gameSlug: gameSlugFromCode } = await gameSlugRes.json();
+      if (gameSlugFromCode !== gameId) throw new Error("Room code does not match game");
+
+
+
+
       const { playerId: newPlayerId } =
         await joinRoom({ roomCode, playerName: name });
 
@@ -276,7 +293,7 @@ export default function GameLayout({
   }
 
   // 1) Error
-  if (error) return renderError(error);
+  if (error) return renderError(error, navigate);
 
   // 2) No IDs yet → show form
   if (!roomId || !playerId) {

@@ -91,6 +91,17 @@ export async function getRoomCodeServer(
   return { code: room.code };
 }
 
+
+export async function getGameSlugFromCode(roomCode: string): Promise<{ gameSlug: string }> {
+  if (!roomCode) throw new Error("Room code is required");
+  const room = await prisma.room.findUnique({
+    where: { code: roomCode },
+    select: { game: { select: { slug: true } } },
+  });
+  if (!room) throw new Error("Room not found");
+  return { gameSlug: room.game.slug };
+} 
+
 export async function getRoomIdServer(
   roomCode: string
 ): Promise<{ roomId: string }> {

@@ -6,6 +6,7 @@ import {
   getPlayersServer,
   getRoomCodeServer,
   getRoomIdServer,
+  getGameSlugFromCode,
 
 } from "~/utils/api";
 import type {
@@ -44,9 +45,21 @@ export const loader: LoaderFunction = async ({ request }) => {
         const roomIdResult = await getRoomIdServer(code);
         return json(roomIdResult);
 
+      case "getGameSlugFromCode":
+        const roomCodeForSlug = url.searchParams.get("roomCode");
+        if (!roomCodeForSlug) {
+          throw new Response("Room code is required", { status: 400 });
+        }
+        const gameSlug = await getGameSlugFromCode(roomCodeForSlug);
+        return json(gameSlug);
+
       default:
         throw new Response("Invalid action", { status: 400 });
     }
+
+    
+
+
   } catch (error) {
     console.error(`Error in API loader (${action}):`, error);
     if (error instanceof Response) {
