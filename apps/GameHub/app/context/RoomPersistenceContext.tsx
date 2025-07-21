@@ -13,7 +13,6 @@ export const RoomPersistenceProvider: React.FC<{ children: ReactNode }> = ({ chi
   const [roomId, setRoomId] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
 
-  // Reset context if needed - example: explicitly leaving a game
   const handleSetRoomId = (id: string | null) => {
     setRoomId(id);
     if (id === null) {
@@ -26,6 +25,7 @@ export const RoomPersistenceProvider: React.FC<{ children: ReactNode }> = ({ chi
     setRoomId: handleSetRoomId,
     playerId,
     setPlayerId,
+
   }), [roomId, playerId]);
 
   return (

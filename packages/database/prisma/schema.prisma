@@ -32,7 +32,6 @@ model Room {
   code       String   @unique
 
   players    Player[]
-  states     GameState[]
 }
 
 model Player {
@@ -46,10 +45,3 @@ model Player {
 }
 
 
-model GameState {
-  id        String   @id @default(cuid())
-  room      Room     @relation(fields: [roomId], references: [id])
-  roomId    String
-  timestamp DateTime @default(now())
-  stateJson Json     // e.g. { dice: [1,3,4,4,6], scores: {...}, turn: 2 }
-}

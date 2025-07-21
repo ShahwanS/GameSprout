@@ -43,7 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
         <RoomPersistenceProvider>
           <Navbar />
           {children}

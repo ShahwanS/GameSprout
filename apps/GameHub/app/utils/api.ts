@@ -5,9 +5,7 @@ import type {
   CreateRoomOutput,
   JoinRoomInput,
   JoinRoomOutput,
-  GetRoomStateOutput,
-  PushGameStateInput,
-  PushGameStateOutput,
+
   PlayerDTO,
 } from "./types";
 
@@ -60,44 +58,6 @@ export async function joinRoomServer(
   });
 
   return { playerId: player.id };
-}
-
-export async function getRoomStateServer(
-  roomId: string
-): Promise<GetRoomStateOutput> {
-  if (!roomId) throw new Error("roomId is required");
-
-  const players = await prisma.player.findMany({
-    where: { roomId },
-    select: { id: true, name: true, joinedAt: true },
-    orderBy: { joinedAt: "asc" },
-  });
-
-  const latest = await prisma.gameState.findFirst({
-    where: { roomId },
-    orderBy: { timestamp: "desc" },
-  });
-
-  return {
-    players: players.map((p: any) => ({
-      id: p.id,
-      name: p.name,
-      joinedAt: p.joinedAt.toISOString(),
-    })),
-    latestState: latest?.stateJson ?? null,
-  };
-}
-
-export async function pushGameStateServer(
-  input: PushGameStateInput
-): Promise<PushGameStateOutput> {
-  if (!input.roomId || input.state == null) {
-    throw new Error("Invalid input");
-  }
-  await prisma.gameState.create({
-    data: { roomId: input.roomId, stateJson: input.state },
-  });
-  return { success: true };
 }
 
 export async function getPlayersServer(

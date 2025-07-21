@@ -156,90 +156,93 @@ const NimGame: React.FC = () => {
 
   // --- UI ---
   return (
-    <div className="max-w-2xl mx-auto p-3 sm:p-6">
-      {/* Room code display */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          🎮 Nim Game
-        </h1>
-        {roomCode && (
-          <div className="bg-gray-700/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-gray-600/50">
-            <span className="text-gray-400 text-xs">Code:</span>
-            <span className="ml-2 text-white font-mono font-bold text-base tracking-wider">{roomCode}</span>
-          </div>
-        )}
-      </div>
-      <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <p className="text-gray-600 text-base sm:text-lg text-center sm:text-left">
-          Take turns removing coins from a single row. The player who removes the last coin loses!
-        </p>
-        <div className="flex gap-2">
-          <button
-            onClick={handleNewGame}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-lg text-sm sm:text-base"
-          >
-            New Game
-          </button>
-          <button
-            onClick={handleLeaveGame}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-lg text-sm sm:text-base"
-          >
-            Leave Game
-          </button>
-        </div>
-      </div>
-      {/* Game Status */}
-      <div className="mb-6">{renderGameStatus()}</div>
-      {/* First Player Selection */}
-      {!gameState.firstPlayerSelected && players.length >= 2 && (
-        <div className="mb-6">{renderFirstPlayerSelection()}</div>
-      )}
-      {/* Triangle Coins */}
-      {gameState.firstPlayerSelected && renderTriangle()}
-      {/* End Turn Button */}
-      {isMyTurn && hasRemoved && !gameState.gameOver && (
-        <div className="flex justify-center mb-8">
-          <button
-            onClick={handleEndTurn}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-xl transition-all duration-200 shadow-lg text-base sm:text-lg"
-          >
-            End Turn
-          </button>
-        </div>
-      )}
-      {/* Game Info */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-100 p-4 sm:p-6 rounded-2xl shadow-lg border border-blue-200">
-          <h3 className="text-lg sm:text-xl font-bold mb-4 text-gray-800">Players</h3>
-          <div className="space-y-2 sm:space-y-3">
-            {players.map((player: PlayerDTO, index: number) => (
-              <div
-                key={player.id}
-                className={`flex items-center gap-3 p-2 sm:p-3 rounded-xl ${
-                  index === gameState.currentPlayerIndex 
-                    ? 'bg-blue-500 text-white shadow-lg' 
-                    : 'bg-white/50 text-gray-700'
-                }`}
-              >
-                <span className="font-semibold text-sm sm:text-base">{player.name}</span>
-                <div className="flex items-center gap-2">
-                  {index === gameState.currentPlayerIndex && <span className="text-xl sm:text-2xl">🎯</span>}
-                  {gameState.firstPlayerId === player.id && <span className="text-xs sm:text-sm bg-yellow-500 text-white px-2 py-1 rounded-full">1st</span>}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="bg-gradient-to-r from-purple-50 to-pink-100 p-4 sm:p-6 rounded-2xl shadow-lg border border-purple-200">
-          <h3 className="text-lg sm:text-xl font-bold mb-4 text-gray-800">Game Info</h3>
-          <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
-            <div className="flex justify-between items-center p-2 sm:p-3 bg-white/50 rounded-lg">
-              <span className="font-semibold text-gray-700">Nim-sum:</span>
-              <span className="font-bold text-purple-600">{nimSum}</span>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="max-w-2xl mx-auto p-3 sm:p-6">
+        {/* Room code display */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            🎮 Nim Game
+          </h1>
+          {roomCode && (
+            <div className="bg-gray-700/50 backdrop-blur-sm rounded-lg px-4 py-2 border border-gray-600/50">
+              <span className="text-gray-400 text-xs">Code:</span>
+              <span className="ml-2 text-white font-mono font-bold text-base tracking-wider">{roomCode}</span>
             </div>
-            <div className="flex justify-between items-center p-2 sm:p-3 bg-white/50 rounded-lg">
-              <span className="font-semibold text-gray-700">Total coins:</span>
-              <span className="font-bold text-purple-600">{actualRemainingCoins.reduce((sum, heap) => sum + heap, 0)}</span>
+          )}
+        </div>
+        <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-gray-300 text-base sm:text-lg text-center sm:text-left">
+            Take turns removing coins from a single row. The player who removes the last coin loses!
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={handleNewGame}
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-lg text-sm sm:text-base"
+            >
+              New Game
+            </button>
+            <button
+              onClick={handleLeaveGame}
+              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-lg text-sm sm:text-base"
+            >
+              Leave Game
+            </button>
+          </div>
+        </div>
+        {/* Game Status */}
+        <div className="mb-6">{renderGameStatus()}</div>
+        {/* First Player Selection */}
+        {!gameState.firstPlayerSelected && players.length >= 2 && (
+          <div className="mb-6">{renderFirstPlayerSelection()}</div>
+        )}
+        {/* Triangle Coins */}
+        {gameState.firstPlayerSelected && renderTriangle()}
+        {/* End Turn Button */}
+        
+          <div className="flex justify-center mb-8">
+            <button
+              onClick={handleEndTurn}
+              disabled={!isMyTurn || !hasRemoved || gameState.gameOver}
+              className={`${!isMyTurn || !hasRemoved || gameState.gameOver ? 'opacity-50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-xl transition-all duration-200 shadow-lg text-base sm:text-lg`}
+            >
+              End Turn
+            </button>
+          </div>
+        
+        {/* Game Info */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div className="bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-lg border border-blue-500/30">
+            <h3 className="text-lg sm:text-xl font-bold mb-4 text-gray-100">Players</h3>
+            <div className="space-y-2 sm:space-y-3">
+              {players.map((player: PlayerDTO, index: number) => (
+                <div
+                  key={player.id}
+                  className={`flex items-center gap-3 p-2 sm:p-3 rounded-xl ${
+                    index === gameState.currentPlayerIndex 
+                      ? 'bg-blue-500/50 text-white shadow-lg' 
+                      : 'bg-white/10 text-gray-200'
+                  }`}
+                >
+                  <span className="font-semibold text-sm sm:text-base">{player.name}</span>
+                  <div className="flex items-center gap-2">
+                    {index === gameState.currentPlayerIndex && <span className="text-xl sm:text-2xl">🎯</span>}
+                    {gameState.firstPlayerId === player.id && <span className="text-xs sm:text-sm bg-yellow-500/80 text-white px-2 py-1 rounded-full">1st</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-lg border border-purple-500/30">
+            <h3 className="text-lg sm:text-xl font-bold mb-4 text-gray-100">Game Info</h3>
+            <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
+              <div className="flex justify-between items-center p-2 sm:p-3 bg-white/10 rounded-lg">
+                <span className="font-semibold text-gray-200">Nim-sum:</span>
+                <span className="font-bold text-purple-300">{nimSum}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 sm:p-3 bg-white/10 rounded-lg">
+                <span className="font-semibold text-gray-200">Total coins:</span>
+                <span className="font-bold text-purple-300">{actualRemainingCoins.reduce((sum, heap) => sum + heap, 0)}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -253,7 +256,7 @@ const NimGame: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center p-4 sm:p-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-2xl shadow-xl"
+        className="text-center p-4 sm:p-8 bg-gradient-to-r from-yellow-500/80 to-orange-600/80 backdrop-blur-sm text-white rounded-2xl shadow-xl"
       >
         <h2 className="text-2xl sm:text-3xl font-bold mb-4">🎯 Choose Who Goes First</h2>
         <p className="text-lg sm:text-xl mb-6">In Nim, the first player has a significant advantage (or disadvantage?). Choose wisely!</p>
@@ -282,7 +285,7 @@ const NimGame: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center p-4 sm:p-8 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-2xl shadow-xl"
+          className="text-center p-4 sm:p-8 bg-gradient-to-r from-green-500/80 to-blue-600/80 backdrop-blur-sm text-white rounded-2xl shadow-xl"
         >
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">🎉 Game Over!</h2>
           {winner ? (
@@ -296,11 +299,11 @@ const NimGame: React.FC = () => {
     
     if (!gameState.firstPlayerSelected) {
       return (
-        <div className="text-center p-4 sm:p-6 bg-gradient-to-r from-yellow-50 to-orange-100 rounded-2xl shadow-lg border border-yellow-200">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-gray-800">
+        <div className="text-center p-4 sm:p-6 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm rounded-2xl shadow-lg border border-yellow-500/30">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-gray-100">
             ⏳ Waiting for First Player Selection
           </h2>
-          <p className="text-sm sm:text-base text-gray-700">
+          <p className="text-sm sm:text-base text-gray-300">
             Players need to choose who goes first before the game can begin.
           </p>
         </div>
@@ -308,11 +311,11 @@ const NimGame: React.FC = () => {
     }
     
     return (
-      <div className="text-center p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-100 rounded-2xl shadow-lg border border-blue-200">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-gray-800">
+      <div className="text-center p-4 sm:p-6 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm rounded-2xl shadow-lg border border-blue-500/30">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-gray-100">
           {isMyTurn ? "🎯 Your Turn" : `⏳ ${currentPlayer?.name || 'Player'}'s Turn`}
         </h2>
-        <p className="text-sm sm:text-base text-gray-700">
+        <p className="text-sm sm:text-base text-gray-300">
           {isMyTurn ? "Click a coin to remove it and all to its right in the row. Then end your turn." : "Waiting for opponent..."}
         </p>
       </div>

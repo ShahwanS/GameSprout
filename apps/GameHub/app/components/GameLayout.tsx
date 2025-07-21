@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "@remix-run/react";
+import { useNavigate, useLocation,  } from "@remix-run/react";
 import React, {
   useState,
   createContext,
@@ -9,7 +9,7 @@ import React, {
 
 import CreateOrJoinRoom from "~/components/CreateOrJoinRoom";
 import { createRoom, joinRoom } from "~/utils/api";
-import type { GetRoomStateOutput, PlayerDTO } from "~/utils/types";
+import type { PlayerDTO } from "~/utils/types";
 import {
   joinRoom as joinRoomSocket,
   pushState as pushStateSocket,
@@ -26,7 +26,7 @@ interface RoomContextType {
   roomId: string;
   playerId: string;
   players: PlayerDTO[];
-  latestState: GetRoomStateOutput["latestState"];
+  latestState: any;
   pushState: (state: unknown) => void;
 }
 const RoomContext = createContext<RoomContextType | undefined>(undefined);
@@ -74,14 +74,30 @@ function renderError(error: string) {
     </div>
   );
 }
-function renderLoading(text = "Loading game…") {
+
+
+function renderLoading(
+  text = "Loading game…", 
+  onLeaveRoom: () => void,
+) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
       <Spinner />
       <div className="text-white text-lg mt-4 animate-pulse">{text}</div>
+      <div className="flex gap-4 mt-6">
+        <button 
+          onClick={onLeaveRoom}
+          className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors duration-200"
+        >
+          Leave Room
+        </button>
+      </div>
     </div>
   );
 }
+
+
+
 export interface GameLayoutProps {
   gameId: string;
   children: React.ReactNode;
@@ -95,12 +111,29 @@ export default function GameLayout({
   const navigate = useNavigate();
   const location = useLocation();
   const { roomId, setRoomId, playerId, setPlayerId } = useRoomPersistence();
-
-  const [error, setError] = useState<string | null>(null);
   const [latestState, setLatestState] = useState<any>(null);
   const [playerDetails, setPlayerDetails] = useState<PlayerDTO[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const playerNameRef = useRef<string | undefined>(undefined);
   const [isJoiningRoom, setIsJoiningRoom] = useState(false);
+
+
+
+
+  // Leave room function
+  const handleLeaveRoom = () => {
+    if (roomId && playerId) {
+      // Leave the socket room
+      leaveRoomSocket(roomId, playerId);
+    }
+    // Clear all room data
+    setRoomId(null);
+    setPlayerId(null);
+    setLatestState(null);
+    setPlayerDetails([]);
+    // Navigate to home
+    navigate('/');
+  };
 
   // Keep name in ref so sockets can use it
   useEffect(() => {
@@ -163,6 +196,17 @@ export default function GameLayout({
       }
     }
   }, [gameId, roomId, playerId, latestState, playerDetails, navigate, location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname !== `/games/${gameId}/room/${roomId}`) {
+      setRoomId(null);
+      setPlayerId(null);
+      setLatestState(null);
+      setPlayerDetails([]);
+    }
+  }, [location.pathname]);
+
+
 
   async function handleCreate(name: string) {
     try {
@@ -247,18 +291,18 @@ export default function GameLayout({
   }
 
   // 3) Waiting for sockets…
-  const hasSocketState =
-    playerDetails.length > 0 && latestState;
-  const playerConfirmed =
-    hasSocketState && playerDetails.some((p) => p.id === playerId);
+
+  const hasSocketState = playerDetails.length > 0 && latestState;
+  const playerConfirmed = hasSocketState && playerDetails.some((p) => p.id === playerId);
 
   if (!hasSocketState || !playerConfirmed) {
     let txt = "Connecting to room…";
     if (hasSocketState && !playerConfirmed) txt = "Confirming player…";
     else if (!latestState) txt = "Waiting for game state…";
     else if (!playerDetails.length) txt = "Waiting for player list…";
-    return renderLoading(txt);
+    return renderLoading(txt,handleLeaveRoom);
   }
+
 
   // 4) Finally: provide context + render nested routes
   return (

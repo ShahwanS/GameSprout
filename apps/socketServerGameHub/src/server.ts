@@ -41,14 +41,25 @@ io.on('connection', (socket: SocketWithPlayerId) => {
   console.log(`User connected: ${socket.id}`);
 
   // --- Room Joining ---
-  socket.on('joinRoom', ({ roomId, playerId, playerName }: { roomId: string; playerId: string; playerName?: string }) => {
+  socket.on('joinRoom', ({ roomId, playerId, playerName}: { roomId: string; playerId: string; playerName?: string }) => {
     if (!roomId || !playerId) {
       console.error('joinRoom failed: Missing roomId or playerId', { roomId, playerId });
       socket.emit('joinError', 'Room ID and Player ID are required.');
       return;
     }
 
-    console.log(`Player ${playerId} (${playerName || 'No Name'}) attempting to join room ${roomId}`);
+
+    // //if player exists then save gamestate for that player kick them out add the new player and readd the gamestate
+    // if (roomPlayers[roomId] && roomPlayers[roomId].has(playerId)) {
+    //   const state = gameStates[roomId];
+    //   roomPlayers[roomId].delete(playerId);
+    //   roomPlayers[roomId].add(playerId);
+    //   gameStates[roomId] = state;
+    //   socket.emit('gameState', state);
+    //   socket.emit('playersUpdate', Array.from(roomPlayers[roomId]));
+    //   return;
+    // }
+
     socket.join(roomId);
     socket.playerId = playerId;
 
@@ -95,14 +106,14 @@ io.on('connection', (socket: SocketWithPlayerId) => {
       const winnerName = state.winner && state.winner.playerName ? state.winner.playerName : 'N/A';
       console.log(`State received for room ${roomId} from Player ${requestingPlayerId}. Game Over: ${state.gameOver}. Winner: ${winnerName}`);
     } else {
-      console.log(`State received for room ${roomId} from Player ${requestingPlayerId}. (gameOver property not found or not a boolean)`);
+      console.log(`State received for room ${roomId} from Player ${requestingPlayerId}.`);
     }
     
     gameStates[roomId] = state;
     io.to(roomId).emit('gameState', state); 
   });
-
-
+  
+  
   // --- Leaving Room / Disconnecting---
   socket.on('leaveRoom', async ({ roomId, playerId }: { roomId: string; playerId: string }) => { 
 
@@ -124,6 +135,8 @@ io.on('connection', (socket: SocketWithPlayerId) => {
       }
     }
 
+    
+
     // Handle in-memory state and broadcast
     try {
       if (roomPlayers[roomId] && roomPlayers[roomId].has(playerId)) {
@@ -139,10 +152,12 @@ io.on('connection', (socket: SocketWithPlayerId) => {
         if (gameStates[roomId]) {
           const state = gameStates[roomId];
           let stateModified = false;
+          //for games featuring scores
           if (state.scores && state.scores[playerId]) {
             delete state.scores[playerId];
             stateModified = true;
           }
+          //updated gamestate for all games & fixing current player index
           if (state.currentPlayerIndex != null && state.currentPlayerIndex >= remainingPlayerIds.length && remainingPlayerIds.length > 0) {
             state.currentPlayerIndex = 0;
             stateModified = true;
@@ -151,7 +166,6 @@ io.on('connection', (socket: SocketWithPlayerId) => {
             io.to(roomId).emit('gameState', state);
           }
         }
-        // --- End Generic State Update ---
 
         // Broadcast updated player list
         io.to(roomId).emit('playersUpdate', remainingPlayerIds);
@@ -161,92 +175,22 @@ io.on('connection', (socket: SocketWithPlayerId) => {
             console.log(`Room ${roomId} is now empty, deleting state.`);
             delete roomPlayers[roomId];
             delete gameStates[roomId];
+            try {
+              await prisma.room.delete({ where: { id: roomId } });
+            } catch (err: any) {
+              console.error(`DB Error deleting room ${roomId} on leaveRoom:`, err);
+            }
         }
       }
     } catch (memoryErr) {
        console.error(`Error during in-memory cleanup/emit for player ${playerId} in room ${roomId} after leaveRoom:`, memoryErr);
     }
 
-    // Make the socket leave the specific room
     socket.leave(roomId);
 
   });
-
-  // --- Handle Disconnections ---
-  socket.on('disconnecting', async (reason: string) => { 
-    const playerId = socket.playerId; // Get playerId stored on socket
-
-    if (!playerId) {
-      console.warn(`Disconnecting socket ${socket.id} had no associated playerId. Reason: ${reason}`);
-      return;
-    }
-
-    console.log(`Handling disconnection for Player ${playerId} (Socket ${socket.id}). Reason: ${reason}`);
-    let playerWasInMemory = false;
-
-    for (const roomId of socket.rooms) {
-      if (roomId === socket.id) continue; 
-      
-      console.log(`Processing disconnect cleanup for Player ${playerId} in room ${roomId}`);
-      playerWasInMemory = false; 
-
-      // Attempt DB delete
-      try {
-        await prisma.player.delete({ where: { id: playerId } });
-      } catch (err: any) {
-        if (err.code === 'P2025') {
-          console.log(`Player ${playerId} not found in DB on disconnect from room ${roomId} (maybe already deleted).`);
-        } else {
-          console.error(`DB Error deleting player ${playerId} on disconnect from room ${roomId}:`, err);
-        }
-      }
-
-      // Handle in-memory state and broadcast
-      try {
-          if (roomPlayers[roomId] && roomPlayers[roomId].has(playerId)) {
-            roomPlayers[roomId].delete(playerId);
-            playerWasInMemory = true;
-          } else {
-            // This might happen if leaveRoom was called just before disconnect
-            console.warn(`Player ${playerId} not found in memory for room ${roomId} during disconnect.`);
-          }
-
-          if (playerWasInMemory) {
-            const remainingPlayerIds = Array.from(roomPlayers[roomId]);
-
-            // --- Generic State Update Logic (from snippet) ---
-            if (gameStates[roomId]) {
-              const state = gameStates[roomId];
-              let stateModified = false;
-              if (state.scores && state.scores[playerId]) {
-                delete state.scores[playerId];
-                stateModified = true;
-              }
-              // index adjustment
-              if (state.currentPlayerIndex != null && state.currentPlayerIndex >= remainingPlayerIds.length && remainingPlayerIds.length > 0) {
-                state.currentPlayerIndex = 0;
-                stateModified = true;
-              }
-              if (stateModified) {
-                io.to(roomId).emit('gameState', state);
-              }
-            }
-            // --- End Generic State Update ---
-
-            io.to(roomId).emit('playersUpdate', remainingPlayerIds);
-
-            if (remainingPlayerIds.length === 0) {
-              console.log(`Room ${roomId} is now empty, deleting state.`);
-              delete roomPlayers[roomId];
-              delete gameStates[roomId];
-            }
-          }
-      } catch (memoryErr) {
-          console.error(`Error during in-memory cleanup/emit for player ${playerId} in room ${roomId} on disconnect:`, memoryErr);
-      }
-    } 
-  }); 
-
+  
+  
 });
 
 

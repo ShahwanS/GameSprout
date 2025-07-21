@@ -6,13 +6,11 @@ import {
   getPlayersServer,
   getRoomCodeServer,
   getRoomIdServer,
-  getRoomStateServer,
-  pushGameStateServer,
+
 } from "~/utils/api";
 import type {
   CreateRoomInput,
   JoinRoomInput,
-  PushGameStateInput,
 } from "~/utils/types";
 
 // GET requests - handled by loader
@@ -45,14 +43,6 @@ export const loader: LoaderFunction = async ({ request }) => {
         }
         const roomIdResult = await getRoomIdServer(code);
         return json(roomIdResult);
-
-      case "getRoomState":
-        const roomIdForState = url.searchParams.get("roomId");
-        if (!roomIdForState) {
-          throw new Response("Room ID is required", { status: 400 });
-        }
-        const roomState = await getRoomStateServer(roomIdForState);
-        return json(roomState);
 
       default:
         throw new Response("Invalid action", { status: 400 });
@@ -90,13 +80,6 @@ export const action: ActionFunction = async ({ request }) => {
         const joinInput = JSON.parse(joinData) as JoinRoomInput;
         const joinResult = await joinRoomServer(joinInput);
         return json(joinResult);
-
-      case "pushGameState":
-        const pushFormData = await request.formData();
-        const pushData = pushFormData.get("data") as string;
-        const pushInput = JSON.parse(pushData) as PushGameStateInput;
-        const pushResult = await pushGameStateServer(pushInput);
-        return json(pushResult);
 
       default:
         throw new Response("Invalid action", { status: 400 });
