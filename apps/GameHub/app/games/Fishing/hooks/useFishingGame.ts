@@ -6,7 +6,6 @@ import {
   dealCards,
   checkAndHandleCompletedSets,
   checkGameOver,
-  passTurn,
   passTurnToNextPlayerWithCards,
 } from "../gameLogic";
 import { sortHand } from "~/utils/cardUtils";
@@ -362,7 +361,7 @@ export function useFishingGame() {
         newState.playerStockpiles = playerStockpiles;
         
         // Pass turn to next player since guess was wrong
-        newState = passTurn(newState);
+        newState = passTurnToNextPlayerWithCards(newState);
         
         // Check for game over
         const { gameOver, winner } = checkGameOver(newState);

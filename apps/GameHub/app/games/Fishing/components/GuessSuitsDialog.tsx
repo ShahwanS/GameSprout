@@ -15,6 +15,7 @@ interface GuessSuitsDialogProps {
   guessedSuits: string[];
   handleSuitToggle: (suit: string) => void;
   handleGuessSuits: () => void;
+
 }
 
 export default function GuessSuitsDialog({
@@ -25,6 +26,11 @@ export default function GuessSuitsDialog({
   handleSuitToggle,
   handleGuessSuits,
 }: GuessSuitsDialogProps) {
+  // Calculate the maximum number of suits that can be selected
+  const maxSuitsToSelect = currentAsk?.shownCards.length || 0;
+  const canSelectMore = guessedSuits.length < maxSuitsToSelect;
+  const isAtMax = guessedSuits.length === maxSuitsToSelect;
+
   return (
     <AnimatePresence>
       {open && (
@@ -71,30 +77,51 @@ export default function GuessSuitsDialog({
                   <p className="text-white/90 text-xs sm:text-sm leading-relaxed">
                     {currentAsk.targetPlayerName} has {currentAsk.shownCards.length} {currentAsk.requestedRank}(s). Select the suits you think they are:
                   </p>
+                  
+                  {/* Selection Counter */}
+                  <div className="flex items-center justify-between text-xs sm:text-sm">
+                    <span className="text-white/80">
+                      Selected: {guessedSuits.length}/{maxSuitsToSelect}
+                    </span>
+                    {isAtMax && (
+                      <span className="text-green-300 font-medium">
+                        ✓ Maximum selected
+                      </span>
+                    )}
+                  </div>
+                  
                   <p className="text-red-300 text-xs bg-red-500/10 p-2 rounded-lg">
                     ⚠️ Warning: Canceling will count as a wrong guess and end your turn!
                   </p>
                   
                   {/* Suit Buttons */}
                   <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                    {["S", "H", "D", "C"].map(suit => (
-                      <motion.button
-                        key={suit}
-                        onClick={() => handleSuitToggle(suit)}
-                        className={`p-2 sm:p-3 rounded-xl border-2 text-base sm:text-lg font-bold transition-all duration-200 ${
-                          guessedSuits.includes(suit)
-                            ? 'bg-blue-500 border-blue-400 text-white shadow-lg scale-105'
-                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105'
-                        }`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="flex flex-col items-center justify-center space-y-1">
-                          <span className="text-xl sm:text-2xl">{getSuitSymbol(suit)}</span>
-                          <span className="text-xs opacity-80">{getSuitFullName(suit)}</span>
-                        </div>
-                      </motion.button>
-                    ))}
+                    {["S", "H", "D", "C"].map(suit => {
+                      const isSelected = guessedSuits.includes(suit);
+                      const isDisabled = !isSelected && !canSelectMore;
+                      
+                      return (
+                        <motion.button
+                          key={suit}
+                          onClick={() => !isDisabled && handleSuitToggle(suit)}
+                          disabled={isDisabled}
+                          className={`p-2 sm:p-3 rounded-xl border-2 text-base sm:text-lg font-bold transition-all duration-200 ${
+                            isSelected
+                              ? 'bg-blue-500 border-blue-400 text-white shadow-lg scale-105'
+                              : isDisabled
+                              ? 'bg-gray-600/50 border-gray-500/30 text-gray-400 cursor-not-allowed'
+                              : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105'
+                          }`}
+                          whileHover={!isDisabled ? { scale: 1.02 } : {}}
+                          whileTap={!isDisabled ? { scale: 0.98 } : {}}
+                        >
+                          <div className="flex flex-col items-center justify-center space-y-1">
+                            <span className="text-xl sm:text-2xl">{getSuitSymbol(suit)}</span>
+                            <span className="text-xs opacity-80">{getSuitFullName(suit)}</span>
+                          </div>
+                        </motion.button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -110,7 +137,12 @@ export default function GuessSuitsDialog({
                 </Button>
                 <Button 
                   onClick={handleGuessSuits}
-                  className="bg-blue-500 text-white hover:bg-blue-600 font-bold w-full text-xs sm:text-sm"
+                  disabled={guessedSuits.length === 0}
+                  className={`font-bold w-full text-xs sm:text-sm ${
+                    guessedSuits.length === 0
+                      ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                  }`}
                 >
                   Submit Guess
                 </Button>

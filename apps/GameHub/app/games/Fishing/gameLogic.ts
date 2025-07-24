@@ -95,13 +95,6 @@ export function checkGameOver(state: FishingGameState): { gameOver: boolean; win
   return { gameOver: false, winner: null };
 }
 
-// Pass turn to next player
-export function passTurn(state: FishingGameState): FishingGameState {
-  const newState = { ...state };
-  newState.currentPlayerIndex = (newState.currentPlayerIndex + 1) % newState.players.length;
-  newState.players = newState.players.map((p, i) => ({ ...p, isCurrentPlayer: i === newState.currentPlayerIndex }));
-  return newState;
-}
 
 // Pass turn to next player who has cards
 export function passTurnToNextPlayerWithCards(state: FishingGameState): FishingGameState {
