@@ -1,11 +1,11 @@
 import { io, Socket } from "socket.io-client";
 
 // Get socket URL from environment variable exposed via window.ENV
-// const SOCKET_URL = typeof window !== 'undefined' && window.ENV?.SOCKET_URL 
-//   ? window.ENV.SOCKET_URL 
-//   : "https://socket.stormyfocus.cloud";
+const SOCKET_URL = typeof window !== 'undefined' && window.ENV?.SOCKET_URL 
+  ? window.ENV.SOCKET_URL 
+  : "https://socket.stormyfocus.cloud";
 
-const SOCKET_URL = "http://localhost:4000";
+// const SOCKET_URL = "http://localhost:4000";
 
 
 let socket: Socket | null = null;
