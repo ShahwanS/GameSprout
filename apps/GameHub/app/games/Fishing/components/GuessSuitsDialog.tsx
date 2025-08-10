@@ -44,7 +44,7 @@ export default function GuessSuitsDialog({
             onClick={() => onOpenChange(false)}
           />
           
-          {/* Compact Sliding Panel */}
+          {/* Responsive Sliding Panel */}
           <motion.div
             initial={{ x: "100%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -55,100 +55,100 @@ export default function GuessSuitsDialog({
               stiffness: 300,
               opacity: { duration: 0.2 }
             }}
-            className="fixed right-2 sm:right-4 top-1/4 w-[calc(100vw-1rem)] sm:w-80 md:w-96 max-h-[70vh] sm:max-h-[60vh] bg-gradient-to-br from-slate-800/90 to-slate-700/90 sm:from-slate-800/95 sm:to-slate-700/95 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl z-50 overflow-hidden"
+            className="fixed right-0 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 w-[95vw] sm:w-80 md:w-96 max-h-[85vh] sm:max-h-[70vh] md:max-h-[60vh] bg-gradient-to-br from-slate-800/90 to-slate-700/90 sm:from-slate-800/95 sm:to-slate-700/95 backdrop-blur-md border border-white/30 rounded-l-2xl sm:rounded-2xl shadow-2xl z-50 overflow-hidden"
           >
-                          <div className="p-3 sm:p-4 md:p-6 max-h-full overflow-y-auto">
-                {/* Header */}
-                <div className="mb-3 sm:mb-4 flex items-center justify-between">
-                  <h2 className="text-white text-base sm:text-lg font-bold">Guess the suits!</h2>
-                  <button
-                    onClick={() => onOpenChange(false)}
-                    className="text-white/60 hover:text-white transition-colors p-1"
-                  >
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              
-              {/* Content */}
-              {currentAsk && currentAsk.shownCards.length > 0 && (
-                <div className="space-y-3 sm:space-y-4">
-                  <p className="text-white/90 text-xs sm:text-sm leading-relaxed">
-                    {currentAsk.targetPlayerName} has {currentAsk.shownCards.length} {currentAsk.requestedRank}(s). Select the suits you think they are:
-                  </p>
-                  
-                  {/* Selection Counter */}
-                  <div className="flex items-center justify-between text-xs sm:text-sm">
-                    <span className="text-white/80">
-                      Selected: {guessedSuits.length}/{maxSuitsToSelect}
-                    </span>
-                    {isAtMax && (
-                      <span className="text-green-300 font-medium">
-                        ✓ Maximum selected
-                      </span>
-                    )}
-                  </div>
-                  
-                  <p className="text-red-300 text-xs bg-red-500/10 p-2 rounded-lg">
-                    ⚠️ Warning: Canceling will count as a wrong guess and end your turn!
-                  </p>
-                  
-                  {/* Suit Buttons */}
-                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
-                    {["S", "H", "D", "C"].map(suit => {
-                      const isSelected = guessedSuits.includes(suit);
-                      const isDisabled = !isSelected && !canSelectMore;
-                      
-                      return (
-                        <motion.button
-                          key={suit}
-                          onClick={() => !isDisabled && handleSuitToggle(suit)}
-                          disabled={isDisabled}
-                          className={`p-2 sm:p-3 rounded-xl border-2 text-base sm:text-lg font-bold transition-all duration-200 ${
-                            isSelected
-                              ? 'bg-blue-500 border-blue-400 text-white shadow-lg scale-105'
-                              : isDisabled
-                              ? 'bg-gray-600/50 border-gray-500/30 text-gray-400 cursor-not-allowed'
-                              : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105'
-                          }`}
-                          whileHover={!isDisabled ? { scale: 1.02 } : {}}
-                          whileTap={!isDisabled ? { scale: 0.98 } : {}}
-                        >
-                          <div className="flex flex-col items-center justify-center space-y-1">
-                            <span className="text-xl sm:text-2xl">{getSuitSymbol(suit)}</span>
-                            <span className="text-xs opacity-80">{getSuitFullName(suit)}</span>
-                          </div>
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-              
-              {/* Footer */}
-              <div className="mt-4 sm:mt-6 space-y-2">
-                <Button 
-                  variant="outline" 
+            <div className="p-3 sm:p-4 md:p-6 max-h-full overflow-y-auto">
+              {/* Header */}
+              <div className="mb-3 sm:mb-4 flex items-center justify-between">
+                <h2 className="text-white text-sm sm:text-base md:text-lg font-bold">Guess the suits!</h2>
+                <button
                   onClick={() => onOpenChange(false)}
-                  className="bg-red-500/20 border-red-400/30 text-red-300 hover:bg-red-500/30 w-full text-xs sm:text-sm"
+                  className="text-white/60 hover:text-white transition-colors p-1"
                 >
-                  Cancel (Wrong Guess)
-                </Button>
-                <Button 
-                  onClick={handleGuessSuits}
-                  disabled={guessedSuits.length === 0}
-                  className={`font-bold w-full text-xs sm:text-sm ${
-                    guessedSuits.length === 0
-                      ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
-                  }`}
-                >
-                  Submit Guess
-                </Button>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
+            
+            {/* Content */}
+            {currentAsk && currentAsk.shownCards.length > 0 && (
+              <div className="space-y-2 sm:space-y-3 md:space-y-4">
+                <p className="text-white/90 text-xs sm:text-sm leading-relaxed">
+                  {currentAsk.targetPlayerName} has {currentAsk.shownCards.length} {currentAsk.requestedRank}(s). Select the suits you think they are:
+                </p>
+                
+                {/* Selection Counter */}
+                <div className="flex items-center justify-between text-xs sm:text-sm">
+                  <span className="text-white/80">
+                    Selected: {guessedSuits.length}/{maxSuitsToSelect}
+                  </span>
+                  {isAtMax && (
+                    <span className="text-green-300 font-medium text-xs sm:text-sm">
+                      ✓ Maximum selected
+                    </span>
+                  )}
+                </div>
+                
+                <p className="text-red-300 text-xs bg-red-500/10 p-2 rounded-lg">
+                  ⚠️ Warning: Canceling will count as a wrong guess and end your turn!
+                </p>
+                
+                {/* Suit Buttons - Responsive Grid */}
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  {["S", "H", "D", "C"].map(suit => {
+                    const isSelected = guessedSuits.includes(suit);
+                    const isDisabled = !isSelected && !canSelectMore;
+                    
+                    return (
+                      <motion.button
+                        key={suit}
+                        onClick={() => !isDisabled && handleSuitToggle(suit)}
+                        disabled={isDisabled}
+                        className={`p-2 sm:p-3 rounded-xl border-2 text-sm sm:text-base md:text-lg font-bold transition-all duration-200 ${
+                          isSelected
+                            ? 'bg-blue-500 border-blue-400 text-white shadow-lg scale-105'
+                            : isDisabled
+                            ? 'bg-gray-600/50 border-gray-500/30 text-gray-400 cursor-not-allowed'
+                            : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105'
+                        }`}
+                        whileHover={!isDisabled ? { scale: 1.02 } : {}}
+                        whileTap={!isDisabled ? { scale: 0.98 } : {}}
+                      >
+                        <div className="flex flex-col items-center justify-center space-y-1">
+                          <span className="text-lg sm:text-xl md:text-2xl">{getSuitSymbol(suit)}</span>
+                          <span className="text-xs opacity-80">{getSuitFullName(suit)}</span>
+                        </div>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            
+            {/* Footer */}
+            <div className="mt-3 sm:mt-4 md:mt-6 space-y-2">
+              <Button 
+                variant="outline" 
+                onClick={() => onOpenChange(false)}
+                className="bg-red-500/20 border-red-400/30 text-red-300 hover:bg-red-500/30 w-full text-xs sm:text-sm"
+              >
+                Cancel (Wrong Guess)
+              </Button>
+              <Button 
+                onClick={handleGuessSuits}
+                disabled={guessedSuits.length === 0}
+                className={`font-bold w-full text-xs sm:text-sm ${
+                  guessedSuits.length === 0
+                    ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                    : 'bg-blue-500 text-white hover:bg-blue-600'
+                }`}
+              >
+                Submit Guess
+              </Button>
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
         </>
       )}
     </AnimatePresence>

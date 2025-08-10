@@ -40,24 +40,24 @@ export default function GameActivity({
   isMyTurn,
 }: GameActivityProps) {
   return (
-    <div className="mb-8">
-      <h3 className="text-lg font-semibold text-white/90 mb-4">Game Activity:</h3>
+    <div className="mb-4 sm:mb-6 md:mb-8">
+      <h3 className="text-base sm:text-lg font-semibold text-white/90 mb-3 sm:mb-4">Game Activity:</h3>
       {/* Current Ask Display - Only show to the asking player */}
       {currentAsk && showGuessPopup && playerId !== currentAsk.targetPlayerId && (
         <motion.div
-          className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-6 border border-blue-400/30 mb-4"
+          className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-6 border border-blue-400/30 mb-3 sm:mb-4"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <h4 className="text-lg font-semibold text-blue-300 mb-3">🎯 Current Ask:</h4>
-          <p className="text-blue-200 mb-2">
+          <h4 className="text-base sm:text-lg font-semibold text-blue-300 mb-2 sm:mb-3">🎯 Current Ask:</h4>
+          <p className="text-blue-200 mb-2 text-sm sm:text-base">
             <span className="font-semibold">{allPlayers.find(p => p.id === playerId)?.name}</span>
             {" asked "}
             <span className="font-semibold">{currentAsk.targetPlayerName}</span>
             {" for "}
             <span className="font-bold text-yellow-300">{currentAsk.requestedRank}s</span>
           </p>
-          <p className="text-blue-200 mb-3">
+          <p className="text-blue-200 mb-2 sm:mb-3 text-sm sm:text-base">
             {currentAsk.targetPlayerName} has {currentAsk.shownCards.length} {currentAsk.requestedRank}(s)
           </p>
           {/* <div className="flex gap-2 flex-wrap">
@@ -72,7 +72,7 @@ export default function GameActivity({
               </motion.div>
             ))}
           </div> */}
-          <p className="text-blue-200 mt-3 text-sm">
+          <p className="text-blue-200 mt-2 sm:mt-3 text-xs sm:text-sm">
             Select the suits you think these cards are...
           </p>
         </motion.div>
@@ -80,22 +80,22 @@ export default function GameActivity({
       {/* Current Ask Display - For other players (no card details) */}
       {currentAsk && showGuessPopup && playerId === currentAsk.targetPlayerId && (
         <motion.div
-          className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-6 border border-blue-400/30 mb-4"
+          className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-6 border border-blue-400/30 mb-3 sm:mb-4"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <h4 className="text-lg font-semibold text-blue-300 mb-3">🎯 Current Ask:</h4>
-          <p className="text-blue-200 mb-2">
+          <h4 className="text-base sm:text-lg font-semibold text-blue-300 mb-2 sm:mb-3">🎯 Current Ask:</h4>
+          <p className="text-blue-200 mb-2 text-sm sm:text-base">
             <span className="font-semibold">{allPlayers.find(p => p.id === playerId)?.name}</span>
             {" asked "}
             <span className="font-semibold">{currentAsk.targetPlayerName}</span>
             {" for "}
             <span className="font-bold text-yellow-300">{currentAsk.requestedRank}s</span>
           </p>
-          <p className="text-blue-200 mb-3">
+          <p className="text-blue-200 mb-2 sm:mb-3 text-sm sm:text-base">
             {currentAsk.targetPlayerName} has {currentAsk.shownCards.length} {currentAsk.requestedRank}(s)
           </p>
-          <p className="text-blue-200 text-sm">
+          <p className="text-blue-200 text-xs sm:text-sm">
             Waiting for {allPlayers.find(p => p.id === playerId)?.name} to guess the suits...
           </p>
         </motion.div>
@@ -103,15 +103,15 @@ export default function GameActivity({
       {/* Recent Activity - Temporary display */}
       {gameState?.lastMove && showLastMove && (
         <motion.div
-          className="bg-green-500/20 backdrop-blur-sm rounded-xl p-4 border border-green-400/30 mb-4"
+          className="bg-green-500/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-green-400/30 mb-3 sm:mb-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          <h4 className="text-lg font-semibold text-green-300 mb-2">📝 Last Move:</h4>
+          <h4 className="text-base sm:text-lg font-semibold text-green-300 mb-2">📝 Last Move:</h4>
           <div className="text-green-200 space-y-1">
-            <p>
+            <p className="text-sm sm:text-base">
               <span className="font-semibold">{gameState.lastMove.playerName}</span>
               {" asked "}
               <span className="font-semibold">{allPlayers.find(p => p.id === gameState.lastMove?.targetPlayerId)?.name}</span>
@@ -119,7 +119,7 @@ export default function GameActivity({
               <span className="font-bold text-yellow-300">{gameState.lastMove.requestedRank}s</span>
             </p>
             {gameState.lastMove.guessedSuits && gameState.lastMove.guessedSuits.length > 0 && (
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">
                 Guessed suits: {gameState.lastMove.guessedSuits.map(suit => `${getSuitFullName(suit)} ${getSuitSymbol(suit)}`).join(", ")}
                 {gameState.lastMove.guessCorrect !== null && (
                   <span className={gameState.lastMove.guessCorrect ? " text-green-300" : " text-red-300"}>
@@ -129,7 +129,7 @@ export default function GameActivity({
               </p>
             )}
             {gameState.lastMove.cardsExchanged.length > 0 && (
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">
                 Cards exchanged: {gameState.lastMove.cardsExchanged.length}
               </p>
             )}
@@ -138,13 +138,13 @@ export default function GameActivity({
       )}
       {/* Turn Status */}
       <motion.div
-        className="bg-slate-500/20 backdrop-blur-sm rounded-xl p-4 border border-slate-400/30"
+        className="bg-slate-500/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-slate-400/30"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <h4 className="text-lg font-semibold text-slate-300 mb-2">🔄 Turn Status:</h4>
-        <p className="text-slate-200">
+        <h4 className="text-base sm:text-lg font-semibold text-slate-300 mb-2">🔄 Turn Status:</h4>
+        <p className="text-slate-200 text-sm sm:text-base">
           {isMyTurn ? (
             <span className="text-blue-300 font-semibold">It's your turn! Click on a player to ask for cards.</span>
           ) : (
