@@ -55,7 +55,7 @@ export default function GuessSuitsDialog({
               stiffness: 300,
               opacity: { duration: 0.2 }
             }}
-            className="fixed right-0 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 w-[95vw] sm:w-80 md:w-96 max-h-[85vh] sm:max-h-[70vh] md:max-h-[60vh] bg-gradient-to-br from-slate-800/90 to-slate-700/90 sm:from-slate-800/95 sm:to-slate-700/95 backdrop-blur-md border border-white/30 rounded-l-2xl sm:rounded-2xl shadow-2xl z-50 overflow-hidden"
+            className="fixed right-2 sm:right-4 md:right-6 top-1/4 sm:top-1/4 md:top-1/4 w-[calc(100vw-1rem)] sm:w-80 md:w-96 max-h-[70vh] sm:max-h-[60vh] md:max-h-[60vh] bg-gradient-to-br from-slate-800/90 to-slate-700/90 sm:from-slate-800/95 sm:to-slate-700/95 backdrop-blur-md border border-white/30 rounded-2xl shadow-2xl z-50 overflow-hidden"
           >
             <div className="p-3 sm:p-4 md:p-6 max-h-full overflow-y-auto">
               {/* Header */}
