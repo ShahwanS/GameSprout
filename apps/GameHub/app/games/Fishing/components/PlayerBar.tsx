@@ -33,12 +33,12 @@ export default function PlayerBar({
   handlePlayerClick,
 }: PlayerBarProps) {
   return (
-    <div className="w-full flex flex-col lg:flex-row items-center justify-between py-2 sm:py-3 px-2 sm:px-4 bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700 border-b border-slate-500 shadow-lg gap-2 sm:gap-3">
+    <div className="w-full flex flex-col lg:flex-row items-center justify-between py-2 sm:py-3 px-2 sm:px-4 backdrop-blur-md bg-white/10 border-b border-white/15 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.45)] gap-2 sm:gap-3">
       {/* Header Section */}
       <div className="flex items-center gap-2 sm:gap-3 w-full lg:w-auto justify-center lg:justify-start">
-        <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-white drop-shadow-lg">🎣 Fishing Game</h1>
+        <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-white drop-shadow">🎣 Fishing Game</h1>
         {roomCode && (
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 border border-white/20">
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 border border-white/15">
             <span className="text-white/80 text-xs">Code:</span>
             <span className="ml-1 sm:ml-2 text-white font-mono font-semibold text-xs sm:text-sm tracking-wider">
               {roomCode}
@@ -56,7 +56,7 @@ export default function PlayerBar({
               <motion.div
                 key={p.id}
                 className={`flex flex-col items-center px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all duration-200 cursor-pointer min-w-[50px] sm:min-w-[60px] lg:min-w-[70px]
-                  ${p.id === currentPlayerId ? "bg-blue-500 border-blue-400 border-2 scale-105 shadow-lg" : "bg-white/10 border border-white/20 hover:bg-white/20"}
+                  ${p.id === currentPlayerId ? "bg-blue-500/90 border-blue-300 border-2 scale-105 shadow-lg" : "bg-white/10 border border-white/15 hover:bg-white/20"}
                   ${p.id === playerId ? "ring-2 ring-blue-300" : ""}`}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -68,7 +68,7 @@ export default function PlayerBar({
                   {p.name.length > 8 ? p.name.substring(0, 8) + '...' : p.name}
                   {p.id === playerId && " (You)"}
                 </span>
-                <span className="text-xs text-white/80 text-center leading-tight">
+                <span className="text-xs text-white/85 text-center leading-tight">
                   {allPlayers[0].id === p.id ? "Host" : p.id === currentPlayerId ? "Current" : ""}
                 </span>
               </motion.div>
@@ -97,7 +97,7 @@ export default function PlayerBar({
               onClick={handleNewGame}
               variant="outline"
               size="sm"
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2"
+              className="bg-white/10 border-white/15 text-white hover:bg-white/20 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2"
             >
               New Game
             </Button>

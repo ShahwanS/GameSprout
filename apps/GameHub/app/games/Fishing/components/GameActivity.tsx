@@ -41,15 +41,13 @@ export default function GameActivity({
 }: GameActivityProps) {
   return (
     <div className="mb-4 sm:mb-6 md:mb-8">
-      <h3 className="text-base sm:text-lg font-semibold text-white/90 mb-3 sm:mb-4">Game Activity:</h3>
-      {/* Current Ask Display - Only show to the asking player */}
-      {currentAsk && showGuessPopup && playerId !== currentAsk.targetPlayerId && (
+      {currentAsk && showGuessPopup && gameState?.players?.[gameState.currentPlayerIndex]?.id === playerId && (
         <motion.div
           className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 md:p-6 border border-blue-400/30 mb-3 sm:mb-4"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <h4 className="text-base sm:text-lg font-semibold text-blue-300 mb-2 sm:mb-3">🎯 Current Ask:</h4>
+          <h4 className="text-base sm:text-lg font-semibold text-blue-300 drop-shadow mb-2 sm:mb-3">🎯 Current Ask:</h4>
           <p className="text-blue-200 mb-2 text-sm sm:text-base">
             <span className="font-semibold">{allPlayers.find(p => p.id === playerId)?.name}</span>
             {" asked "}
@@ -84,7 +82,7 @@ export default function GameActivity({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <h4 className="text-base sm:text-lg font-semibold text-blue-300 mb-2 sm:mb-3">🎯 Current Ask:</h4>
+          <h4 className="text-base sm:text-lg font-semibold text-blue-300 drop-shadow mb-2 sm:mb-3">🎯 Current Ask:</h4>
           <p className="text-blue-200 mb-2 text-sm sm:text-base">
             <span className="font-semibold">{allPlayers.find(p => p.id === playerId)?.name}</span>
             {" asked "}
@@ -109,7 +107,7 @@ export default function GameActivity({
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          <h4 className="text-base sm:text-lg font-semibold text-green-300 mb-2">📝 Last Move:</h4>
+          <h4 className="text-base sm:text-lg font-semibold text-green-300 drop-shadow mb-2">📝 Last Move:</h4>
           <div className="text-green-200 space-y-1">
             <p className="text-sm sm:text-base">
               <span className="font-semibold">{gameState.lastMove.playerName}</span>

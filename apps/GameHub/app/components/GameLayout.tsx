@@ -1,4 +1,4 @@
-import { useNavigate, useLocation,  } from "@remix-run/react";
+import { useNavigate, useLocation } from "@remix-run/react";
 import React, {
   useState,
   createContext,

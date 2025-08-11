@@ -127,11 +127,21 @@ export function useFishingGame() {
     
     // Case 1: No cards found - draw a card and pass turn
     if (matchingCards.length === 0) {
-      let newState = { ...state };
+
+      let newState: FishingGameState = {
+        ...state,
+        deck: [...state.deck],
+        playerHands: { ...state.playerHands },
+        playerScores: { ...state.playerScores },
+        playerStockpiles: { ...state.playerStockpiles },
+      };
       
       if (newState.deck.length > 0) {
         const drawnCard = newState.deck.pop()!;
-        newState.playerHands[playerId] = [...(newState.playerHands[playerId] || []), drawnCard];
+        newState.playerHands[playerId] = [
+          ...(newState.playerHands[playerId] || []),
+          drawnCard,
+        ];
         
         // Check for completed sets after drawing
         const { playerHands, playerScores, playerStockpiles } = checkAndHandleCompletedSets(
@@ -179,12 +189,21 @@ export function useFishingGame() {
       const askingPlayerCardsOfRank = askingPlayerHand.filter(card => card.rank === selectedRank);
       
       if (askingPlayerCardsOfRank.length === 3 && matchingCards.length === 1) {
-        let newState = { ...state };
+        let newState: FishingGameState = {
+          ...state,
+          deck: [...state.deck],
+          playerHands: { ...state.playerHands },
+          playerScores: { ...state.playerScores },
+          playerStockpiles: { ...state.playerStockpiles },
+        };
         // Transfer the 4th card to asking player
-        newState.playerHands[playerId] = [...(newState.playerHands[playerId] || []), ...matchingCards];
+        newState.playerHands[playerId] = [
+          ...(newState.playerHands[playerId] || []),
+          ...matchingCards,
+        ];
         // Remove the card from target player
-        newState.playerHands[selectedPlayer] = targetHand.filter(card => 
-          !(card.rank === selectedRank && card.suit === matchingCards[0].suit)
+        newState.playerHands[selectedPlayer] = targetHand.filter(
+          (card) => !(card.rank === selectedRank && card.suit === matchingCards[0].suit)
         );
         
         // Check for completed sets after transfer
@@ -253,7 +272,13 @@ export function useFishingGame() {
       return;
     }
     const state = latestState as FishingGameState;
-    let newState = { ...state };
+    let newState: FishingGameState = {
+      ...state,
+      deck: [...state.deck],
+      playerHands: { ...state.playerHands },
+      playerScores: { ...state.playerScores },
+      playerStockpiles: { ...state.playerStockpiles },
+    };
     
     // Find correctly guessed cards
     const correctGuesses = guessedSuits.filter(guessedSuit => 
@@ -282,7 +307,10 @@ export function useFishingGame() {
     // Draw a card if not all guesses were correct
     if (newState.deck.length > 0 && !guessedAllCorrectly) {
       const drawnCard = newState.deck.pop()!;
-      newState.playerHands[playerId] = [...(newState.playerHands[playerId] || []), drawnCard];
+      newState.playerHands[playerId] = [
+        ...(newState.playerHands[playerId] || []),
+        drawnCard,
+      ];
     }
     
     // Check for completed sets after all changes
